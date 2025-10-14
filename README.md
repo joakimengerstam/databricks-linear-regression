@@ -11,8 +11,19 @@ The second part of the demo is a user interface in the form of a web page that p
 <img width="933" height="434" alt="Screenshot 2025-10-14 at 11 50 22" src="https://github.com/user-attachments/assets/2634753e-1298-455b-996a-3d5b0a5562f3" />
 
 
+Example Databricks notebook run:
+
+<img width="710" height="400" alt="Screenshot 2025-10-14 at 21 45 17" src="https://github.com/user-attachments/assets/6dae965c-f76b-4455-a319-64c94a134646" />
+
+<img width="710" height="356" alt="Screenshot 2025-10-14 at 21 46 25" src="https://github.com/user-attachments/assets/836cab56-7308-4f4d-ae90-6cc193156fcc" />
+
+
+
 Instructions
+------------------------
 
 - notebook.py file is the ML notebook uploaded to Databricks. It requires the test data file 'gkne-dk5s.csv' which should also be uploaded to Databricks.
 
 - app directory contains the Pyton code for the front end as well as a Docker container for easy deployment to a cloud server like AWS or Google Cloud.
+
+- set Databricks api key as environment variable 'DBRICKS_API' when running Docker container
