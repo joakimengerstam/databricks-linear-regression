@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>NYC Taxi Fare Predictor</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body {
+      background-color: #efdf20; /* Dark navy blue */
+      color: #001faf;              /* Make text readable */
+      font-family: 'Segoe UI', sans-serif;
+      font-family: Arial, sans-serif;
+      max-width:720px;
+      margin:40px auto;
+      padding:0 16px;
+    }
+    label {
+      display:block;
+      margin-top:12px;
+    }
+    input[type="number"] {
+      width:100px;
+      padding:6px;
+      margin-right:8px;
+    }
+    button{
+      margin-top:12px;
+      padding:8px 12px;
+    }
+    .result { margin-top:20px; font-weight:600; }
+    .error { color:crimson; }
+  </style>
+</head>
+<body>
+  <h1>NYC Taxi Fare Estimation</h1>
+
+  <p>Predict the fare of your trip.</p>
+  <p>Enter trip distance and if you are travelling during rush hour, then click <em>Predict</em>.</p>
+
+  <label>
+    Trip distance (miles)
+    <input id="trip_distance" type="number" step="0.01" value="2.5" />
+  </label>
+
+  <label>
+    <input type="checkbox" id="rushHour" name="rushHour">
+    Rush Hour (e.g. 7–9 AM, 4–7 PM)
+  </label>
+
+  <button id="predictBtn">Predict fare</button>
+
+  <div id="status" class="result"></div>
+
+  <script>
+    const url = `https://nyctaxi-flask-457867227844.europe-west1.run.app/predict`;
+
+    document.getElementById("predictBtn").addEventListener("click", async () => {
+      const trip_distance = parseFloat(document.getElementById("trip_distance").value);
+      const rushHourCheckbox = document.getElementById("rushHour");
+      const rushHourValue = rushHourCheckbox.checked ? "1" : "0";
+
+      const statusEl = document.getElementById("status");
+      statusEl.className = "result";
+      statusEl.textContent = "Calling model...";
+
+      const payload = {
+        columns: ["trip_distance", "is_rush_hour"],
+        data: [[trip_distance, rushHourValue]]
+      };
+
+      try {
+        const resp = await fetch("/predict", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            'Access-Control-Allow-Origin':'*',
+            'Access-Control-Allow-Methods':'POST,PATCH,OPTIONS'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!resp.ok) {
+          const text = await resp.text();
+          statusEl.classList.add("error");
+          statusEl.textContent = `API error: ${resp.status} ${resp.statusText} — ${text}`;
+          return;
+        }
+
+        const data = await resp.json();
+        let prediction;
+        if (Array.isArray(data) && data.length && Array.isArray(data[0])) {
+          prediction = data[0][0];
+        } else if (Array.isArray(data) && typeof data[0] === "number") {
+          prediction = data[0];
+        } else if (data.predictions) {
+          prediction = data.predictions[0];
+        } else {
+          prediction = JSON.stringify(data);
+        }
+
+        statusEl.textContent = `Predicted fare: $${Number(prediction).toFixed(2)}`;
+      } catch (err) {
+        statusEl.classList.add("error");
+        statusEl.textContent = `Request failed: ${err.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
+
+
