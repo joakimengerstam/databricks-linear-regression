@@ -1,6 +1,6 @@
 
 # Build for local testing on osx
-docker build -t joaeng/nyctaxi-flask .
+docker build -t joaeng/nyctaxi .
 
 # Build for deployment on Google Cloud amd64 architecture
 docker build --platform linux/amd64 -t joaeng/nyctaxi:amd64 . 
