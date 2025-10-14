@@ -7,8 +7,7 @@ app = Flask(__name__)
 
 # 🔧 Databricks Model Serving endpoint and token
 DATABRICKS_URL = "https://dbc-a4864acb-d90e.cloud.databricks.com/serving-endpoints/nyc-taxi-fare/invocations"
-# DATABRICKS_TOKEN = os.environ.get("DATABRICKS_TOKEN")
-DATABRICKS_TOKEN = "dapi252f160d2af154aa8f13a166fbbcc55d"
+DATABRICKS_TOKEN = os.environ.get("DBRICKS_API")
 
 
 # Allow local web apps to call this backend
