@@ -7,3 +7,10 @@ The second part of the demo is a user interface in the form of a web page that p
 
 
 <img width="933" height="434" alt="Screenshot 2025-10-14 at 11 50 22" src="https://github.com/user-attachments/assets/2634753e-1298-455b-996a-3d5b0a5562f3" />
+
+
+Instructions
+
+- notebook.py file is the ML notebook uploaded to Databricks. It requires the test data file 'gkne-dk5s.csv' which should also be uploaded to Databricks.
+
+- app directory contains the Pyton code for the front end as well as a Docker container for easy deployment to a cloud server like AWS or Google Cloud.
