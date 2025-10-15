@@ -21,6 +21,32 @@ print(f"\nTotal rows: {df.count()}")
 print("\nSample data:")
 display(df.limit(10))
 
+# ========================================
+# BASELINE COMPARISON: Simple Formula
+# ========================================
+print("\n" + "="*60)
+print("BASELINE COMPARISON - Simple Formula: 3.5 + 3.1 * distance")
+print("="*60)
+predictions_with_baseline = df.withColumn(
+    'baseline_prediction',
+    3.5 + 3.1 * col('trip_distance')
+)
+
+# Calculate baseline metrics
+evaluator_baseline = RegressionEvaluator(
+    labelCol='fare_amount',
+    predictionCol='baseline_prediction'
+)
+
+baseline_rmse = evaluator_baseline.evaluate(predictions_with_baseline, {evaluator_baseline.metricName: "rmse"})
+baseline_r2 = evaluator_baseline.evaluate(predictions_with_baseline, {evaluator_baseline.metricName: "r2"})
+baseline_mae = evaluator_baseline.evaluate(predictions_with_baseline, {evaluator_baseline.metricName: "mae"})
+
+print("\nSimple Formula: fare = $3.50 + ($1.10 × distance)")
+print(f"Baseline RMSE: ${baseline_rmse:.2f}")
+print(f"Baseline R²: {baseline_r2:.4f} ({baseline_r2*100:.2f}%)")
+print(f"Baseline MAE: ${baseline_mae:.2f}")
+
 # Keep only realistic trips
 df_clean = df.filter((df.trip_distance > 0) & (df.fare_amount > 1))
 

@@ -39,17 +39,19 @@
 
   <label>
     Trip distance (miles)
-    <input id="trip_distance" type="number" step="0.01" value="2.5" />
+    <input id="trip_distance" type="number" step="0.1" value="2.5" />
   </label>
 
   <label>
     <input type="checkbox" id="rushHour" name="rushHour">
-    Rush Hour (e.g. 7–9 AM, 4–7 PM)
+    Rush Hour (8–9 AM, 5–6 PM)
   </label>
 
   <button id="predictBtn">Predict fare</button>
 
   <div id="status" class="result"></div>
+
+  <div id="calculated" class="result"></div>
 
   <script>
     const url = `https://nyctaxi-flask-457867227844.europe-west1.run.app/predict`;
@@ -62,6 +64,7 @@
       const statusEl = document.getElementById("status");
       statusEl.className = "result";
       statusEl.textContent = "Calling model...";
+      const simpleResultEl = document.getElementById("calculated");
 
       const payload = {
         columns: ["trip_distance", "is_rush_hour"],
@@ -99,6 +102,11 @@
         }
 
         statusEl.textContent = `Predicted fare: $${Number(prediction).toFixed(2)}`;
+
+        // Calculate simple formula: 3.5 + 3.1 * distance
+        const simpleFare = 3.5 + 3.1 * trip_distance;
+        simpleResultEl.textContent = `Calculated fare (3.5 + 3.1*distance): $${simpleFare.toFixed(2)}`;
+
       } catch (err) {
         statusEl.classList.add("error");
         statusEl.textContent = `Request failed: ${err.message}`;
